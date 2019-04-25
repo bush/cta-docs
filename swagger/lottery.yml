@@ -181,6 +181,32 @@ paths:
       security:
       - sigv4: []
 
+  /lotteries/{lotteryId}/select:
+    post:
+      tags:
+      - "lotteries"
+      summary: "Select a winner for the draw."
+      description: >
+                    Selects a winner for the current draw if its currently in
+                    *closed* state.  Selecting a winner for the draw moves it
+                    to *complete* state.  Once a draw is moved to complete
+                    state, a newly created draw becomes the current draw which
+                    is initialized in the *inactive* state.
+      operationId: "selectDrawWinner"
+      parameters:
+      - name: lotteryId
+        in: path
+        required: true
+        description: The lottery id.
+        type: string
+      responses:
+        200:
+          description: "The draw was successfully closed."
+        400:
+          description: "Bad request data."
+      security:
+      - sigv4: []
+
 securityDefinitions:
   sigv4:
     type: "apiKey"
