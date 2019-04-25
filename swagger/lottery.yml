@@ -156,6 +156,31 @@ paths:
       security:
       - sigv4: []
 
+  /lotteries/{lotteryId}/close:
+    post:
+      tags:
+      - "lotteries"
+      summary: "Closes a draw."
+      description: >
+                    Closes the current draw if it is either currently in
+                    *active* state.  Closing the draw moves it to *closed*
+                    state which prepares the draw for winner selection.  When
+                    a draw is closed tickets may no longer be purchased.
+      operationId: "closeDraw"
+      parameters:
+      - name: lotteryId
+        in: path
+        required: true
+        description: The lottery id.
+        type: string
+      responses:
+        200:
+          description: "The draw was successfully closed."
+        400:
+          description: "Bad request data."
+      security:
+      - sigv4: []
+
 securityDefinitions:
   sigv4:
     type: "apiKey"
