@@ -1,0 +1,130 @@
+swagger: "2.0"
+info:
+  description: "Chasetheace.live lottery service"
+  version: "1.0.0"
+  title: "CTA Lottery Service"
+  termsOfService: "https://chasetheace.live/terms/"
+  contact:
+    email: "admin@chasetheace.live"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "api.chasetheace.live"
+basePath: "/v2"
+tags:
+- name: "lotteries"
+  description: "CTA lottery"
+  externalDocs:
+    description: "Find out more"
+    url: "https://chasetheace.live"
+
+schemes:
+- "https"
+paths:
+  /lotteries:
+    post:
+      tags:
+      - "lotteries"
+      summary: "Creates a new lottery."
+      description: "Creates a new lottery. When a new lottery is successfully created the first draw is created as well in the *not-started* state.  The response object contains the new lottery Id, draw Id, and the draw state."
+      operationId: "addLottery"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Meta information about the lottery."
+        required: true
+        schema:
+          $ref: "#/definitions/Lottery"
+      responses:
+        200:
+          description: "The lottery was successfully created."
+          schema:
+            type: object
+            properties:
+              lotteryId:
+                type: string
+                example: "37e16ee0-65ce-11e9-8eaa-f1e55b00bb62"
+              drawId:
+                type: string
+                example: "540e1e20-667c-11e9-b126-5962acc9f69d"
+              drawState:
+                type: string
+                example: "not-started"
+        400:
+          description: "Bad request data."
+          schema:
+            type: object
+            properties:
+              error:
+                type: integer
+                example: 400
+              errorCode:
+                type: string
+                example: "N1000"
+              msg:
+                type: string
+                example: "Failed to create resource: Invalid data."      
+              
+        500:
+          description: "An internal error occurred."
+          schema:
+            type: object
+            properties:
+              error:
+                type: integer
+                example: 500
+              errorCode:
+                type: string
+                example: "D1001"
+              msg:
+                type: string
+                example: "Failed to put item to database: ..."
+                
+        511:
+          description: "Authenticated access is required."
+          schema:
+            type: object
+            properties:
+              error:
+                type: integer
+                example: 511
+              errorCode:
+                type: string
+                example: "A1000"
+              msg:
+                type: string
+                example: "Network authentication required."
+        
+      security:
+      - sigv4: []
+securityDefinitions:
+  sigv4:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+    x-amazon-apigateway-authtype: "awsSigv4"
+    
+     
+definitions:
+  Lottery:
+    type: "object"
+    required:
+    - "name"
+    - "description"
+    properties:
+      
+      name:
+        type: "string"
+        example: "Ottawa Chasetheace Lottery"
+      description:
+        type: "string"
+        example: "Community lottery starting in May 2019"
+      
+ 
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "https://chasetheace.live/docs"
