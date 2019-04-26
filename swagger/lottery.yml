@@ -22,6 +22,46 @@ schemes:
 - "https"
 paths:
   /lotteries:
+    get:
+      tags:
+      - "lotteries"
+      summary: "Get a collection of lotteries for the current user."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "The lottery was successfully created."
+          schema:
+              type: object
+              properties:
+                defaultLottery:
+                  type: object
+                  properties:
+                    lotteryId:
+                      type: "string"
+                    role:
+                      type: "string"
+
+                availableLotteries:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      lotteryId:
+                        type: "string"
+                      role:
+                        type: "string"
+
+              example:
+                defaultLottery:
+                  lotteryId: "37e16ee0-65ce-11e9-8eaa-f1e55b00bb62"
+                  role: "admin"
+                availableLotteries:
+                - lotteryId: "37e16ee0-65ce-11e9-8eaa-f1e55b00bb62"
+                  role: "admin"
+                - lotteryId: "37e16ee0-65ce-11e9-8ebb-f1e55b00bb62"
+                  role: "seller"
+
     post:
       tags:
       - "lotteries"
@@ -42,7 +82,7 @@ paths:
         description: "Meta information about the lottery."
         required: true
         schema:
-          $ref: "#/definitions/Lottery"
+          $ref: "#/definitions/LotteryDescription"
       responses:
         200:
           description: "The lottery was successfully created."
@@ -52,12 +92,9 @@ paths:
               lotteryId:
                 type: string
                 example: "37e16ee0-65ce-11e9-8eaa-f1e55b00bb62"
-              drawId:
-                type: string
-                example: "540e1e20-667c-11e9-b126-5962acc9f69d"
               drawState:
                 type: string
-                example: "not-started"
+                example: "inactive"
         400:
           description: "Bad request data."
           schema:
@@ -216,7 +253,7 @@ securityDefinitions:
 
 
 definitions:
-  Lottery:
+  LotteryDescription:
     type: "object"
     required:
     - "name"
@@ -229,7 +266,6 @@ definitions:
       description:
         type: "string"
         example: "Community lottery starting in May 2019"
-
 
 externalDocs:
   description: "Find out more about Swagger"
